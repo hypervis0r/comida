@@ -172,6 +172,8 @@ def find_guid_in_address_space(start_address, end_address):
             
     return result
 
+def demangle_function_name(name: str):
+    return idc.demangle_name(name, idc.get_inf_attr(idc.INF_SHORT_DN)) if not None else name
   
 def find_com_references():
     """
@@ -183,7 +185,7 @@ def find_com_references():
     result = []
     for seg in idautils.Segments():
         for funcea in idautils.Functions(seg, idc.get_segm_end(seg)):
-            result += [(idaapi.ida_funcs.get_func_name(funcea), x) for x in find_guid_in_address_space(funcea, idc.find_func_end(funcea))]       
+            result += [(demangle_function_name(idaapi.ida_funcs.get_func_name(funcea)), x) for x in find_guid_in_address_space(funcea, idc.find_func_end(funcea))]       
                 
     return result
 
